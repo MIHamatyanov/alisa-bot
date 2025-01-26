@@ -5,26 +5,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.kestar.alisabot.model.dto.ActiveUserInfo;
+import ru.kestar.alisabot.model.dto.TelegramActionContext;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
-import ru.kestar.alisabot.security.SecurityContextHelper;
+import ru.kestar.alisabot.security.storage.TokenStorage;
 
 @Component
 @RequiredArgsConstructor
 public class GetTokenCallbackHandler implements UpdateHandler {
+    private final TokenStorage tokenStorage;
 
     @Override
-    public Optional<BotApiMethod<?>> handle(Update update) {
-        final ActiveUserInfo activeUserInfo = SecurityContextHelper.getActiveUser();
-
-        final String userToken = Optional.ofNullable(activeUserInfo.getTokenInfo())
+    public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
+        final String userToken = tokenStorage.get(context.getChatId())
             .map(YandexTokenInfo::getAccessToken)
             .map(token -> "Ваш токен: " + token)
             .orElse("Вы не авторизованы. Нажмите на /start для авторизации.");
 
         final SendMessage responseMessage = SendMessage.builder()
-            .chatId(activeUserInfo.getChatId())
+            .chatId(context.getChatId())
             .text(userToken)
             .build();
         return Optional.of(responseMessage);

@@ -4,11 +4,9 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import ru.kestar.alisabot.incoming.bot.menu.MenuBuilder;
-import ru.kestar.alisabot.model.dto.ActiveUserInfo;
-import ru.kestar.alisabot.security.SecurityContextHelper;
+import ru.kestar.alisabot.model.dto.TelegramActionContext;
 import ru.kestar.alisabot.security.storage.TokenStorage;
 
 @Component
@@ -18,14 +16,15 @@ public class LogoutCallbackHandler implements UpdateHandler {
     private final MenuBuilder menuBuilder;
 
     @Override
-    public Optional<BotApiMethod<?>> handle(Update update) {
-        final ActiveUserInfo activeUserInfo = SecurityContextHelper.getActiveUser();
-        tokenStorage.revokeToken(activeUserInfo.getChatId());
+    public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
+        final String chatId = context.getChatId();
+        tokenStorage.revokeToken(chatId);
 
-        final SendMessage responseMessage = SendMessage.builder()
-            .chatId(activeUserInfo.getChatId())
+        final EditMessageText responseMessage = EditMessageText.builder()
+            .chatId(chatId)
+            .messageId(context.getUpdate().getCallbackQuery().getMessage().getMessageId())
             .text("Вы вышли из аккаунта. Для выполнения действий необходимо авторизоваться.")
-            .replyMarkup(menuBuilder.buildUnauthenticatedUserStartMenu())
+            .replyMarkup(menuBuilder.buildUnauthenticatedUserStartMenu(chatId))
             .build();
         return Optional.of(responseMessage);
     }
