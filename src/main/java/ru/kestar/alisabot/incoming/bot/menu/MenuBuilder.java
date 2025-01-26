@@ -1,9 +1,9 @@
 package ru.kestar.alisabot.incoming.bot.menu;
 
-import static ru.kestar.alisabot.model.enums.CallbackAction.GET_HOUSE_INFO;
-import static ru.kestar.alisabot.model.enums.CallbackAction.GET_TOKEN;
-import static ru.kestar.alisabot.model.enums.CallbackAction.LOGOUT;
-import static ru.kestar.alisabot.model.enums.CallbackAction.START_MENU;
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_HOUSE_INFO;
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_TOKEN;
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.LOGOUT;
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.START_MENU;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import ru.kestar.alisabot.config.properties.ApplicationProperties;
 import ru.kestar.alisabot.exception.InternalUnexpectedException;
 import ru.kestar.alisabot.model.dto.CallbackData;
-import ru.kestar.alisabot.model.enums.CallbackAction;
+import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
 
 @Slf4j
 @Component
@@ -71,11 +71,11 @@ public class MenuBuilder {
             .build();
     }
 
-    private String createCallbackData(CallbackAction action) {
+    private String createCallbackData(TelegramCallbackAction action) {
         return createCallbackData(action, null);
     }
 
-    private String createCallbackData(CallbackAction action, Map<String, String> data) {
+    private String createCallbackData(TelegramCallbackAction action, Map<String, String> data) {
         final CallbackData callbackData = new CallbackData(action, data);
         try {
             return objectMapper.writeValueAsString(callbackData);

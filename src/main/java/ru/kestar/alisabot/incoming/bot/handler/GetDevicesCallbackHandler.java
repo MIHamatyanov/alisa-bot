@@ -1,5 +1,8 @@
 package ru.kestar.alisabot.incoming.bot.handler;
 
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_HOUSE_INFO;
+
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,6 +14,7 @@ import ru.kestar.alisabot.incoming.bot.menu.MenuBuilder;
 import ru.kestar.alisabot.model.dto.TelegramActionContext;
 import ru.kestar.alisabot.model.dto.yandex.DeviceInfo;
 import ru.kestar.alisabot.model.dto.yandex.SmartHouseInfo;
+import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
 import ru.kestar.alisabot.service.YandexService;
 
 @Component
@@ -55,5 +59,10 @@ public class GetDevicesCallbackHandler implements UpdateHandler {
             .text(DEVICES_MESSAGE_FORMAT.formatted(devicesInfo.toString()))
             .replyMarkup(menuBuilder.buildUserDevicesMenu())
             .build();
+    }
+
+    @Override
+    public List<TelegramCallbackAction> getSupportedCallbacks() {
+        return List.of(GET_HOUSE_INFO);
     }
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.kestar.alisabot.model.enums.CallbackAction;
+import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +13,7 @@ import ru.kestar.alisabot.model.enums.CallbackAction;
 public class CallbackData {
 
     @JsonProperty("action")
-    private CallbackAction action;
+    private TelegramCallbackAction action;
 
     @JsonProperty("data")
     private Map<String, String> data;

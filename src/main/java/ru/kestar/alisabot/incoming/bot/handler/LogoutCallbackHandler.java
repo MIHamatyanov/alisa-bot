@@ -1,5 +1,8 @@
 package ru.kestar.alisabot.incoming.bot.handler;
 
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.LOGOUT;
+
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -7,6 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import ru.kestar.alisabot.incoming.bot.menu.MenuBuilder;
 import ru.kestar.alisabot.model.dto.TelegramActionContext;
+import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
 import ru.kestar.alisabot.security.storage.TokenStorage;
 
 @Component
@@ -27,5 +31,10 @@ public class LogoutCallbackHandler implements UpdateHandler {
             .replyMarkup(menuBuilder.buildUnauthenticatedUserStartMenu(chatId))
             .build();
         return Optional.of(responseMessage);
+    }
+
+    @Override
+    public List<TelegramCallbackAction> getSupportedCallbacks() {
+        return List.of(LOGOUT);
     }
 }

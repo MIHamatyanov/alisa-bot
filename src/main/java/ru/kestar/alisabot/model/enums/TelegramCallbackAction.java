@@ -1,6 +1,6 @@
 package ru.kestar.alisabot.model.enums;
 
-public enum CallbackAction {
+public enum TelegramCallbackAction {
     GET_TOKEN,
     GET_HOUSE_INFO,
     LOGOUT,

@@ -1,5 +1,9 @@
 package ru.kestar.alisabot.incoming.bot.handler;
 
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.START_MENU;
+import static ru.kestar.alisabot.model.enums.TelegramCommand.START;
+
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,6 +14,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import ru.kestar.alisabot.incoming.bot.menu.MenuBuilder;
 import ru.kestar.alisabot.model.dto.TelegramActionContext;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
+import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
+import ru.kestar.alisabot.model.enums.TelegramCommand;
 import ru.kestar.alisabot.security.storage.TokenStorage;
 
 @Component
@@ -59,5 +65,15 @@ public class StartCommandHandler implements UpdateHandler {
             .replyMarkup(menuBuilder.buildUnauthenticatedUserStartMenu(context.getChatId()))
             .build();
         return Optional.of(responseMessage);
+    }
+
+    @Override
+    public List<TelegramCommand> getSupportedCommands() {
+        return List.of(START);
+    }
+
+    @Override
+    public List<TelegramCallbackAction> getSupportedCallbacks() {
+        return List.of(START_MENU);
     }
 }
