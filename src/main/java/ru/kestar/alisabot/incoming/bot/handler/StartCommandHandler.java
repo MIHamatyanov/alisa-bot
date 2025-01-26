@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.kestar.alisabot.incoming.bot.menu.MenuBuilder;
 import ru.kestar.alisabot.model.dto.TelegramActionContext;
@@ -35,12 +34,11 @@ public class StartCommandHandler implements UpdateHandler {
             """.formatted(tokenInfo.getLogin());
         final InlineKeyboardMarkup menu = menuBuilder.buildAuthenticatedUserStartMenu();
 
-        final Update update = context.getUpdate();
         final BotApiMethod<?> responseMessage;
-        if (update.hasCallbackQuery()) {
+        if (context.getUpdate().hasCallbackQuery()) {
             responseMessage = EditMessageText.builder()
                 .chatId(context.getChatId())
-                .messageId(update.getCallbackQuery().getMessage().getMessageId())
+                .messageId(context.getCallbackMessageId())
                 .text(text)
                 .replyMarkup(menu)
                 .build();

@@ -63,7 +63,11 @@ public class TelegramRequestDispatcher {
     }
 
     private Optional<BotApiMethod<?>> dispatchCallback(TelegramActionContext context) {
-        final CallbackData callbackData = getCallbackData(context.getUpdate().getCallbackQuery());
+        final CallbackQuery callbackQuery = context.getUpdate().getCallbackQuery();
+        final CallbackData callbackData = getCallbackData(callbackQuery);
+        context.setCallbackData(callbackData);
+        context.setCallbackMessageId(callbackQuery.getMessage().getMessageId());
+
         final UpdateHandler callbackHandler = switch (callbackData.getAction()) {
             case GET_TOKEN -> getTokenCallbackHandler;
             case GET_HOUSE_INFO -> getDevicesCallbackHandler;

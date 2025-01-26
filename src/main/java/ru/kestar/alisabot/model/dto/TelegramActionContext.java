@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class TelegramActionContext {
     private Update update;
     private CallbackData callbackData;
+    private Integer callbackMessageId;
 
     public TelegramActionContext(Update update) {
         this.update = update;

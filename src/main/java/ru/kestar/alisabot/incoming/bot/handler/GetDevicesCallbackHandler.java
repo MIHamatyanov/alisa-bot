@@ -51,7 +51,7 @@ public class GetDevicesCallbackHandler implements UpdateHandler {
 
         return EditMessageText.builder()
             .chatId(context.getChatId())
-            .messageId(context.getUpdate().getCallbackQuery().getMessage().getMessageId())
+            .messageId(context.getCallbackMessageId())
             .text(DEVICES_MESSAGE_FORMAT.formatted(devicesInfo.toString()))
             .replyMarkup(menuBuilder.buildUserDevicesMenu())
             .build();

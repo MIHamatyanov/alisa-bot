@@ -22,7 +22,7 @@ public class LogoutCallbackHandler implements UpdateHandler {
 
         final EditMessageText responseMessage = EditMessageText.builder()
             .chatId(chatId)
-            .messageId(context.getUpdate().getCallbackQuery().getMessage().getMessageId())
+            .messageId(context.getCallbackMessageId())
             .text("Вы вышли из аккаунта. Для выполнения действий необходимо авторизоваться.")
             .replyMarkup(menuBuilder.buildUnauthenticatedUserStartMenu(chatId))
             .build();
