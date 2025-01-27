@@ -34,7 +34,7 @@ public class OauthSuccessHandler implements AuthenticationSuccessHandler {
             processSuccessAuthentication(telegramUserId, authClient, authToken);
         }
 
-        response.sendRedirect("/success.html");
+        response.sendRedirect("/auth/success");
 
     }
 

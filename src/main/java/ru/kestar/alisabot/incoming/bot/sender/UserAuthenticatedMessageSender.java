@@ -16,7 +16,7 @@ public class UserAuthenticatedMessageSender {
         final SendMessage sendMessage = SendMessage.builder()
             .chatId(chatId)
             .text("""
-                Атворизация прошла успешно.
+                Авторизация прошла успешно.
                 
                 Добро пожаловать, %s!
                 Что хотите сделать?
