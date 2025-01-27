@@ -1,7 +1,7 @@
 package ru.kestar.alisabot.incoming.bot.menu;
 
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_HOUSE_INFO;
-import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_TOKEN;
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_PROFILE;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.LOGOUT;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.START_MENU;
 
@@ -28,8 +28,8 @@ public class MenuBuilder {
 
     public InlineKeyboardMarkup buildAuthenticatedUserStartMenu() {
         final InlineKeyboardButton getTokenBtn = InlineKeyboardButton.builder()
-            .text("Получить токен")
-            .callbackData(createCallbackData(GET_TOKEN))
+            .text("Профиль")
+            .callbackData(createCallbackData(GET_PROFILE))
             .build();
 
         final InlineKeyboardButton getHouseInfo = InlineKeyboardButton.builder()
@@ -61,13 +61,21 @@ public class MenuBuilder {
     }
 
     public InlineKeyboardMarkup buildUserDevicesMenu() {
-        final InlineKeyboardButton backBtn = InlineKeyboardButton.builder()
+        return InlineKeyboardMarkup.builder()
+            .keyboardRow(List.of(createBackToStartMenuBtn()))
+            .build();
+    }
+
+    public InlineKeyboardMarkup buildUserProfileMenu() {
+        return InlineKeyboardMarkup.builder()
+            .keyboardRow(List.of(createBackToStartMenuBtn()))
+            .build();
+    }
+
+    private InlineKeyboardButton createBackToStartMenuBtn() {
+        return InlineKeyboardButton.builder()
             .text("<- Назад")
             .callbackData(createCallbackData(START_MENU))
-            .build();
-
-        return InlineKeyboardMarkup.builder()
-            .keyboardRow(List.of(backBtn))
             .build();
     }
 
