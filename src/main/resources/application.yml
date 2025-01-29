@@ -25,7 +25,9 @@ spring:
 application:
   properties:
     base-url: 'http://127.0.0.1:8080'
-  telegram:
-    bot:
-      username: ${TELEGRAM_BOT_USERNAME}
-      token: ${TELEGRAM_BOT_TOKEN}
+
+telegram:
+  bot:
+    enabled: true
+    username: ${TELEGRAM_BOT_USERNAME}
+    token: ${TELEGRAM_BOT_TOKEN}

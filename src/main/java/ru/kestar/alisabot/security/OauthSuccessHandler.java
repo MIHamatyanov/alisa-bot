@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import ru.kestar.alisabot.incoming.bot.sender.UserAuthenticatedMessageSender;
+import ru.kestar.alisabot.bot.sender.UserAuthenticatedMessageSender;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
 import ru.kestar.alisabot.security.storage.TokenStorage;
 

@@ -1,4 +1,4 @@
-package ru.kestar.alisabot.incoming.bot.handler;
+package ru.kestar.alisabot.bot.handler;
 
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_HOUSE_INFO;
 
@@ -10,12 +10,12 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import ru.kestar.alisabot.exception.YandexIntegrationException;
-import ru.kestar.alisabot.incoming.bot.menu.MenuBuilder;
-import ru.kestar.alisabot.model.dto.TelegramActionContext;
+import ru.kestar.alisabot.bot.menu.MenuBuilder;
 import ru.kestar.alisabot.model.dto.yandex.DeviceInfo;
 import ru.kestar.alisabot.model.dto.yandex.SmartHouseInfo;
-import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
 import ru.kestar.alisabot.service.YandexService;
+import ru.kestar.telegrambotstarter.context.TelegramActionContext;
+import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 
 @Component
 @RequiredArgsConstructor
@@ -62,7 +62,7 @@ public class GetDevicesCallbackHandler implements UpdateHandler {
     }
 
     @Override
-    public List<TelegramCallbackAction> getSupportedCallbacks() {
-        return List.of(GET_HOUSE_INFO);
+    public List<String> getSupportedCallbacks() {
+        return List.of(GET_HOUSE_INFO.name());
     }
 }

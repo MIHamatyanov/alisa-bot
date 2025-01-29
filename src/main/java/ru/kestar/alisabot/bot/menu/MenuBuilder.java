@@ -1,12 +1,10 @@
-package ru.kestar.alisabot.incoming.bot.menu;
+package ru.kestar.alisabot.bot.menu;
 
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_HOUSE_INFO;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_PROFILE;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.LOGOUT;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.START_MENU;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -15,16 +13,16 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.kestar.alisabot.config.properties.ApplicationProperties;
-import ru.kestar.alisabot.exception.InternalUnexpectedException;
-import ru.kestar.alisabot.model.dto.CallbackData;
 import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
+import ru.kestar.telegrambotstarter.context.CallbackData;
+import ru.kestar.telegrambotstarter.context.CallbackDataParser;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class MenuBuilder {
     private final ApplicationProperties applicationProperties;
-    private final ObjectMapper objectMapper;
+    private final CallbackDataParser callbackDataParser;
 
     public InlineKeyboardMarkup buildAuthenticatedUserStartMenu() {
         final InlineKeyboardButton getTokenBtn = InlineKeyboardButton.builder()
@@ -84,12 +82,7 @@ public class MenuBuilder {
     }
 
     private String createCallbackData(TelegramCallbackAction action, Map<String, String> data) {
-        final CallbackData callbackData = new CallbackData(action, data);
-        try {
-            return objectMapper.writeValueAsString(callbackData);
-        } catch (JsonProcessingException e) {
-            log.error("Error occurred while creating callback data", e);
-            throw new InternalUnexpectedException(e.getMessage());
-        }
+        final CallbackData callbackData = new CallbackData(action.name(), data);
+        return callbackDataParser.toString(callbackData);
     }
 }

@@ -1,4 +1,4 @@
-package ru.kestar.alisabot.incoming.bot.handler;
+package ru.kestar.alisabot.bot.handler;
 
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_PROFILE;
 
@@ -8,11 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import ru.kestar.alisabot.incoming.bot.menu.MenuBuilder;
-import ru.kestar.alisabot.model.dto.TelegramActionContext;
+import ru.kestar.alisabot.bot.menu.MenuBuilder;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
-import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
 import ru.kestar.alisabot.security.storage.TokenStorage;
+import ru.kestar.telegrambotstarter.context.TelegramActionContext;
+import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 
 @Component
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class GetProfileCallbackHandler implements UpdateHandler {
     }
 
     @Override
-    public List<TelegramCallbackAction> getSupportedCallbacks() {
-        return List.of(GET_PROFILE);
+    public List<String> getSupportedCallbacks() {
+        return List.of(GET_PROFILE.name());
     }
 }

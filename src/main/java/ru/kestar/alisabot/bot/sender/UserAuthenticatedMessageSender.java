@@ -1,15 +1,15 @@
-package ru.kestar.alisabot.incoming.bot.sender;
+package ru.kestar.alisabot.bot.sender;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import ru.kestar.alisabot.incoming.bot.Bot;
-import ru.kestar.alisabot.incoming.bot.menu.MenuBuilder;
+import ru.kestar.alisabot.bot.menu.MenuBuilder;
+import ru.kestar.telegrambotstarter.bot.TelegramBot;
 
 @Component
 @RequiredArgsConstructor
 public class UserAuthenticatedMessageSender {
-    private final Bot bot;
+    private final TelegramBot bot;
     private final MenuBuilder menuBuilder;
 
     public void send(String chatId, String login) {

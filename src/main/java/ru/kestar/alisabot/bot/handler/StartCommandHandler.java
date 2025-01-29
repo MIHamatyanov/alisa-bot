@@ -1,4 +1,4 @@
-package ru.kestar.alisabot.incoming.bot.handler;
+package ru.kestar.alisabot.bot.handler;
 
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.START_MENU;
 import static ru.kestar.alisabot.model.enums.TelegramCommand.START;
@@ -11,12 +11,11 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.kestar.alisabot.incoming.bot.menu.MenuBuilder;
-import ru.kestar.alisabot.model.dto.TelegramActionContext;
+import ru.kestar.alisabot.bot.menu.MenuBuilder;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
-import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
-import ru.kestar.alisabot.model.enums.TelegramCommand;
 import ru.kestar.alisabot.security.storage.TokenStorage;
+import ru.kestar.telegrambotstarter.context.TelegramActionContext;
+import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 
 @Component
 @RequiredArgsConstructor
@@ -68,12 +67,12 @@ public class StartCommandHandler implements UpdateHandler {
     }
 
     @Override
-    public List<TelegramCommand> getSupportedCommands() {
-        return List.of(START);
+    public List<String> getSupportedCommands() {
+        return List.of(START.getCommand());
     }
 
     @Override
-    public List<TelegramCallbackAction> getSupportedCallbacks() {
-        return List.of(START_MENU);
+    public List<String> getSupportedCallbacks() {
+        return List.of(START_MENU.name());
     }
 }
