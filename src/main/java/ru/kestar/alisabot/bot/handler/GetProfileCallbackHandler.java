@@ -33,7 +33,7 @@ public class GetProfileCallbackHandler implements UpdateHandler {
 
         final EditMessageText.EditMessageTextBuilder responseBuilder = EditMessageText.builder()
             .chatId(context.getChatId())
-            .messageId(context.getCallbackMessageId());
+            .messageId(context.getCallbackData().getMessageId());
         if (tokenInfoOpt.isEmpty()) {
             responseBuilder.text("Вы не авторизованы. Нажмите на /start для авторизации.");
         } else {

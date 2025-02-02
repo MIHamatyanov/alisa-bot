@@ -43,7 +43,7 @@ public class StartCommandHandler implements UpdateHandler {
         if (context.getUpdate().hasCallbackQuery()) {
             responseMessage = EditMessageText.builder()
                 .chatId(context.getChatId())
-                .messageId(context.getCallbackMessageId())
+                .messageId(context.getCallbackData().getMessageId())
                 .text(text)
                 .replyMarkup(menu)
                 .build();

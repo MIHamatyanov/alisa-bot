@@ -1,4 +1,4 @@
-package ru.kestar.alisabot.model.dto.yandex;
+package ru.kestar.alisabot.model.dto.yandex.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -31,7 +31,7 @@ public class DeviceInfo {
     private List<String> groups;
 
     @JsonProperty("capabilities")
-    private List<DeviceCapability> capabilities;
+    private List<Capability> capabilities;
 
     @JsonProperty("properties")
     private List<DeviceProperty> properties;

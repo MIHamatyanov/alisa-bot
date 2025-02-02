@@ -4,15 +4,18 @@ import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_HOUSE_IN
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_PROFILE;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.LOGOUT;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.START_MENU;
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.TURN_OFF;
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.TURN_ON;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.kestar.alisabot.config.properties.ApplicationProperties;
+import ru.kestar.alisabot.model.dto.yandex.response.SmartHouseInfo;
 import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
 import ru.kestar.telegrambotstarter.context.CallbackData;
 import ru.kestar.telegrambotstarter.context.CallbackDataParser;
@@ -58,8 +61,39 @@ public class MenuBuilder {
             .build();
     }
 
-    public InlineKeyboardMarkup buildUserDevicesMenu() {
+    public InlineKeyboardMarkup buildUserDevicesMenu(SmartHouseInfo smartHouseInfo) {
+        List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<>();
+
+        smartHouseInfo.getGroups().forEach(group -> {
+            final InlineKeyboardButton turnOnGroupBtn = InlineKeyboardButton.builder()
+                .text("Включить " + group.getName())
+                .callbackData(createCallbackData(TURN_ON, "group;" + group.getId()))
+                .build();
+
+            final InlineKeyboardButton turnOffGroupBtn = InlineKeyboardButton.builder()
+                .text("Выключить " + group.getName())
+                .callbackData(createCallbackData(TURN_OFF, "group;" + group.getId()))
+                .build();
+
+            keyboardRows.add(List.of(turnOnGroupBtn, turnOffGroupBtn));
+        });
+
+        smartHouseInfo.getDevices().forEach(device -> {
+            final InlineKeyboardButton turnOnGroupBtn = InlineKeyboardButton.builder()
+                .text("Включить " + device.getName())
+                .callbackData(createCallbackData(TURN_ON, "device;" + device.getId()))
+                .build();
+
+            final InlineKeyboardButton turnOffGroupBtn = InlineKeyboardButton.builder()
+                .text("Выключить " + device.getName())
+                .callbackData(createCallbackData(TURN_OFF, "device;" + device.getId()))
+                .build();
+
+            keyboardRows.add(List.of(turnOnGroupBtn, turnOffGroupBtn));
+        });
+
         return InlineKeyboardMarkup.builder()
+            .keyboard(keyboardRows)
             .keyboardRow(List.of(createBackToStartMenuBtn()))
             .build();
     }
@@ -81,7 +115,7 @@ public class MenuBuilder {
         return createCallbackData(action, null);
     }
 
-    private String createCallbackData(TelegramCallbackAction action, Map<String, String> data) {
+    private String createCallbackData(TelegramCallbackAction action, String data) {
         final CallbackData callbackData = new CallbackData(action.name(), data);
         return callbackDataParser.toString(callbackData);
     }

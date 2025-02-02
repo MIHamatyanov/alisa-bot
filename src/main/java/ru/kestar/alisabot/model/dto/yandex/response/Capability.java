@@ -1,11 +1,11 @@
-package ru.kestar.alisabot.model.dto.yandex;
+package ru.kestar.alisabot.model.dto.yandex.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import lombok.Data;
 
 @Data
-public class DeviceCapability {
+public class Capability {
     @JsonProperty("type")
     private String type;
 
@@ -17,7 +17,4 @@ public class DeviceCapability {
 
     @JsonProperty("state")
     private Map<String, Object> state;
-
-    @JsonProperty("last_updated")
-    private float lastUpdated;
 }

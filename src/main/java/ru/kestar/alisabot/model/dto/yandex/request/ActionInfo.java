@@ -1,19 +1,17 @@
-package ru.kestar.alisabot.model.dto.yandex;
+package ru.kestar.alisabot.model.dto.yandex.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class GroupCapability {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ActionInfo {
     @JsonProperty("type")
     private String type;
-
-    @JsonProperty("retrievable")
-    private boolean retrievable;
-
-    @JsonProperty("parameters")
-    private Map<String, Object> parameters;
 
     @JsonProperty("state")
     private Map<String, Object> state;
