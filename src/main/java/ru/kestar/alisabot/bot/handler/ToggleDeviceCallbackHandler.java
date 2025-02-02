@@ -23,10 +23,11 @@ public class ToggleDeviceCallbackHandler implements UpdateHandler {
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
         final CallbackData callbackData = context.getCallbackData();
-        log.info(callbackData.getData());
         final String[] dataParts = callbackData.getData().split(";");
         final String target = dataParts[0];
         final String targetId = dataParts[1];
+
+        log.info("Executing action for {} with id {}", target, targetId);
         if ("group".equals(target)) {
             yandexService.executeGroupAction(context.getChatId(), targetId, callbackData.getAction().equals(TURN_ON.name()));
         } else if ("device".equals(target)) {

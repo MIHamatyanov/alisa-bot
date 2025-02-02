@@ -22,6 +22,18 @@ spring:
             user-info-uri: https://login.yandex.ru/info
             user-name-attribute: id
 
+  datasource:
+    url: jdbc:postgresql://${DATABASE_URL:localhost:5432/kestarbot}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  flyway:
+    locations: classpath:db/migration
+
 application:
   properties:
     base-url: 'http://127.0.0.1:8080'
