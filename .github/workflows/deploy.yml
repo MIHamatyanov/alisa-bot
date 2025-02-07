@@ -52,4 +52,13 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/kestar-telegram-bot:latest
             docker stop kestar-bot || true
             docker rm kestar-bot || true
-            docker run -d --name kestar-bot -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/kestar-telegram-bot:latest
+            docker run -d --name kestar-bot --network shared-network -p 8080:8080 \
+              -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+              -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} \
+              -e DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
+              -e TELEGRAM_BOT_USERNAME=${{ secrets.TELEGRAM_BOT_USERNAME }} \
+              -e TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }} \
+              -e YANDEX_CLIENT_ID=${{ secrets.YANDEX_CLIENT_ID }} \
+              -e YANDEX_CLIENT_SECRET=${{ secrets.YANDEX_CLIENT_SECRET }} \
+              -e APPLICATION_PROPERTIES_BASE_URL=${{ secrets.APPLICATION_PROPERTIES_BASE_URL }} \
+              ${{ secrets.DOCKER_USERNAME }}/kestar-telegram-bot:latest
