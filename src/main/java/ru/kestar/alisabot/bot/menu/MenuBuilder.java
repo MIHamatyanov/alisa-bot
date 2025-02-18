@@ -1,11 +1,13 @@
 package ru.kestar.alisabot.bot.menu;
 
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.CREATE_INVITE_CODE;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_HOUSE_INFO;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_PROFILE;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.LOGOUT;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.START_MENU;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.TURN_OFF;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.TURN_ON;
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.SHOW_INVITE_CODE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,8 +101,24 @@ public class MenuBuilder {
     }
 
     public InlineKeyboardMarkup buildUserProfileMenu() {
+        final InlineKeyboardButton createInviteCodeBtn = InlineKeyboardButton.builder()
+            .text("Создать код приглашения")
+            .callbackData(createCallbackData(CREATE_INVITE_CODE))
+            .build();
+        final InlineKeyboardButton viewInviteCodeBtn = InlineKeyboardButton.builder()
+            .text("Посмотреть коды приглашения")
+            .callbackData(createCallbackData(SHOW_INVITE_CODE))
+            .build();
+
         return InlineKeyboardMarkup.builder()
+            .keyboardRow(List.of(createInviteCodeBtn, viewInviteCodeBtn))
             .keyboardRow(List.of(createBackToStartMenuBtn()))
+            .build();
+    }
+
+    public InlineKeyboardMarkup buildInviteCodesMenu() {
+        return InlineKeyboardMarkup.builder()
+            .keyboardRow(List.of(createBackToUserProfileBtn()))
             .build();
     }
 
@@ -108,6 +126,13 @@ public class MenuBuilder {
         return InlineKeyboardButton.builder()
             .text("<- Назад")
             .callbackData(createCallbackData(START_MENU))
+            .build();
+    }
+
+    private InlineKeyboardButton createBackToUserProfileBtn() {
+        return InlineKeyboardButton.builder()
+            .text("<- Назад")
+            .callbackData(createCallbackData(GET_PROFILE))
             .build();
     }
 

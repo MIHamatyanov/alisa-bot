@@ -38,9 +38,7 @@ public class GetProfileCallbackHandler implements UpdateHandler {
             responseBuilder.text("Вы не авторизованы. Нажмите на /start для авторизации.");
         } else {
             responseBuilder
-                .text(PROFILE_MESSAGE_FORMAT.formatted(
-                    user.getLogin(), user.getToken()
-                ))
+                .text(PROFILE_MESSAGE_FORMAT.formatted(user.getLogin(), user.getToken()))
                 .parseMode("HTML")
                 .replyMarkup(menuBuilder.buildUserProfileMenu());
         }
