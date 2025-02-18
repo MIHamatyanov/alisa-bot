@@ -12,8 +12,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.kestar.alisabot.bot.menu.MenuBuilder;
-import ru.kestar.alisabot.model.dto.YandexTokenInfo;
-import ru.kestar.alisabot.security.storage.TokenStorage;
+import ru.kestar.alisabot.exception.UserNotFoundException;
+import ru.kestar.alisabot.model.entity.User;
+import ru.kestar.alisabot.service.UserService;
 import ru.kestar.telegrambotstarter.context.TelegramActionContext;
 import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 
@@ -21,22 +22,26 @@ import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 @RequiredArgsConstructor
 public class StartCommandHandler implements UpdateHandler {
     private final MenuBuilder menuBuilder;
-    private final TokenStorage tokenStorage;
+    private final UserService userService;
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        final Optional<YandexTokenInfo> tokenInfo = tokenStorage.get(context.getChatId());
-        return tokenInfo.isPresent()
-            ? buildAuthenticatedUserMessage(context, tokenInfo.get())
-            : buildUnauthenticatedUserMessage(context);
+        try {
+            final User user = userService.getUserByTelegramId(context.getChatId());
+            return user.isAuthenticated()
+                ? buildAuthenticatedUserMessage(context, user)
+                : buildUnauthenticatedUserMessage(context);
+        } catch (UserNotFoundException e) {
+            return buildUnauthenticatedUserMessage(context);
+        }
     }
 
     private Optional<BotApiMethod<?>> buildAuthenticatedUserMessage(TelegramActionContext context,
-                                                                    YandexTokenInfo tokenInfo) {
+                                                                    User user) {
         final String text = """
             Добро пожаловать, %s!
             Что хотите сделать?
-            """.formatted(tokenInfo.getLogin());
+            """.formatted(user.getLogin());
         final InlineKeyboardMarkup menu = menuBuilder.buildAuthenticatedUserStartMenu();
 
         final BotApiMethod<?> responseMessage;

@@ -52,6 +52,7 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/kestar-telegram-bot:latest
             docker stop kestar-bot || true
             docker rm kestar-bot || true
+            docker image prune -a || true
             docker run -d --name kestar-bot --network shared-network -p 8080:8080 \
               -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
               -e DATABASE_USERNAME="${{ secrets.DATABASE_USERNAME }}" \

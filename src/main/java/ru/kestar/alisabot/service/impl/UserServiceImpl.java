@@ -1,25 +1,26 @@
-package ru.kestar.alisabot.security.storage;
+package ru.kestar.alisabot.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import ru.kestar.alisabot.exception.UserNotFoundException;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
 import ru.kestar.alisabot.model.entity.User;
 import ru.kestar.alisabot.repository.UserRepository;
+import ru.kestar.alisabot.service.UserService;
 
 @Slf4j
-@Primary
-@Component
+@Service
 @RequiredArgsConstructor
-public class DatabaseTokenStorage implements TokenStorage {
+public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
 
     @Override
-    public void store(String telegramId, YandexTokenInfo tokenInfo) {
-        final Long telegramIdLong = Long.valueOf(telegramId);
+    public void signInUser(String telegramId, YandexTokenInfo tokenInfo) {
+        final Long telegramIdLong = Long.parseLong(telegramId);
         final User user = userRepository.findByTelegramId(telegramIdLong)
             .orElseGet(() -> {
                 User newUser = new User();
@@ -37,18 +38,13 @@ public class DatabaseTokenStorage implements TokenStorage {
     }
 
     @Override
-    public Optional<YandexTokenInfo> get(String telegramId) {
-        return userRepository.findByTelegramId(Long.valueOf(telegramId))
-            .filter(user -> user.getToken() != null)
-            .map(user -> YandexTokenInfo.builder()
-                .login(user.getLogin())
-                .accessToken(user.getToken())
-                .build()
-            );
+    public User getUserByTelegramId(String telegramId) {
+        return userRepository.findByTelegramId(Long.parseLong(telegramId))
+            .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
-    public void revokeToken(String telegramId) {
+    public void logoutUser(String telegramId) {
         final Optional<User> userOpt = userRepository.findByTelegramId(Long.valueOf(telegramId));
         if (userOpt.isEmpty()) {
             return;

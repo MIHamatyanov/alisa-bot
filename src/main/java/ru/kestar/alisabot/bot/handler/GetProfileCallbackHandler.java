@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import ru.kestar.alisabot.bot.menu.MenuBuilder;
-import ru.kestar.alisabot.model.dto.YandexTokenInfo;
-import ru.kestar.alisabot.security.storage.TokenStorage;
+import ru.kestar.alisabot.model.entity.User;
+import ru.kestar.alisabot.service.UserService;
 import ru.kestar.telegrambotstarter.context.TelegramActionContext;
 import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 
@@ -24,23 +24,22 @@ public class GetProfileCallbackHandler implements UpdateHandler {
         Токен - <pre>%s</pre>
         """;
 
-    private final TokenStorage tokenStorage;
+    private final UserService userService;
     private final MenuBuilder menuBuilder;
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        final Optional<YandexTokenInfo> tokenInfoOpt = tokenStorage.get(context.getChatId());
+        final User user = userService.getUserByTelegramId(context.getChatId());
 
         final EditMessageText.EditMessageTextBuilder responseBuilder = EditMessageText.builder()
             .chatId(context.getChatId())
             .messageId(context.getCallbackData().getMessageId());
-        if (tokenInfoOpt.isEmpty()) {
+        if (!user.isAuthenticated()) {
             responseBuilder.text("Вы не авторизованы. Нажмите на /start для авторизации.");
         } else {
-            final YandexTokenInfo tokenInfo = tokenInfoOpt.get();
             responseBuilder
                 .text(PROFILE_MESSAGE_FORMAT.formatted(
-                    tokenInfo.getLogin(), tokenInfo.getAccessToken()
+                    user.getLogin(), user.getToken()
                 ))
                 .parseMode("HTML")
                 .replyMarkup(menuBuilder.buildUserProfileMenu());
