@@ -8,4 +8,6 @@ public interface InviteService {
     Invite createNewInvite(String telegramUserId);
 
     List<Invite> getInvitesByOwner(String ownerId);
+
+    boolean removeInviteCode(String telegramId, String code);
 }

@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
         final User user = userOpt.get();
         user.setLogin(null);
         user.setToken(null);
+        user.setParent(null);
         userRepository.save(user);
     }
 }

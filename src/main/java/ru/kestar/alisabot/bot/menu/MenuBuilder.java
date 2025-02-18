@@ -1,6 +1,7 @@
 package ru.kestar.alisabot.bot.menu;
 
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.CREATE_INVITE_CODE;
+import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.DELETE_INVITE_CODE;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_HOUSE_INFO;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.GET_PROFILE;
 import static ru.kestar.alisabot.model.enums.TelegramCallbackAction.LOGOUT;
@@ -117,7 +118,12 @@ public class MenuBuilder {
     }
 
     public InlineKeyboardMarkup buildInviteCodesMenu() {
+        final InlineKeyboardButton deleteInviteCodeBtn = InlineKeyboardButton.builder()
+            .text("Удалить код приглашения")
+            .callbackData(createCallbackData(DELETE_INVITE_CODE))
+            .build();
         return InlineKeyboardMarkup.builder()
+            .keyboardRow(List.of(deleteInviteCodeBtn))
             .keyboardRow(List.of(createBackToUserProfileBtn()))
             .build();
     }
