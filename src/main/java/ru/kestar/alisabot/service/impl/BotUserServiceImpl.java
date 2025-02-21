@@ -53,7 +53,7 @@ public class BotUserServiceImpl implements BotUserService {
         final BotUser user = userOpt.get();
         user.setLogin(null);
         user.setToken(null);
-        user.setParent(null
+        user.setParent(null);
         botUserRepository.save(user);
     }
 }
