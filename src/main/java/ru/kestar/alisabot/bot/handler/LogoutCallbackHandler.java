@@ -9,20 +9,20 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import ru.kestar.alisabot.bot.menu.MenuBuilder;
-import ru.kestar.alisabot.service.UserService;
+import ru.kestar.alisabot.service.BotUserService;
 import ru.kestar.telegrambotstarter.context.TelegramActionContext;
 import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 
 @Component
 @RequiredArgsConstructor
 public class LogoutCallbackHandler implements UpdateHandler {
-    private final UserService userService;
+    private final BotUserService botUserService;
     private final MenuBuilder menuBuilder;
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
         final String chatId = context.getChatId();
-        userService.logoutUser(chatId);
+        botUserService.logoutUser(chatId);
 
         final EditMessageText responseMessage = EditMessageText.builder()
             .chatId(chatId)

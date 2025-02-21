@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import ru.kestar.alisabot.bot.menu.MenuBuilder;
-import ru.kestar.alisabot.model.entity.User;
-import ru.kestar.alisabot.service.UserService;
+import ru.kestar.alisabot.model.entity.BotUser;
+import ru.kestar.alisabot.service.BotUserService;
 import ru.kestar.telegrambotstarter.context.TelegramActionContext;
 import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 
@@ -24,12 +24,12 @@ public class GetProfileCallbackHandler implements UpdateHandler {
         Токен - <pre>%s</pre>
         """;
 
-    private final UserService userService;
+    private final BotUserService botUserService;
     private final MenuBuilder menuBuilder;
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        final User user = userService.getUserByTelegramId(context.getChatId());
+        final BotUser user = botUserService.getUserByTelegramId(context.getChatId());
 
         final EditMessageText.EditMessageTextBuilder responseBuilder = EditMessageText.builder()
             .chatId(context.getChatId())

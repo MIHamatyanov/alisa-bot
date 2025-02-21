@@ -17,7 +17,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "users")
-public class User {
+public class BotUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,7 +36,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    private User parent;
+    private BotUser parent;
 
     @OneToMany(mappedBy = "owner")
     private List<Invite> inviteCodes;

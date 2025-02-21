@@ -25,7 +25,7 @@ public class Invite {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private User owner;
+    private BotUser owner;
 
     @Column(name = "code")
     private String code;
@@ -38,5 +38,5 @@ public class Invite {
 
     @OneToOne
     @JoinColumn(name = "used_by")
-    private User usedBy;
+    private BotUser usedBy;
 }

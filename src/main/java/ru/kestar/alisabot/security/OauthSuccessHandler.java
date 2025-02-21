@@ -13,13 +13,13 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 import ru.kestar.alisabot.bot.sender.UserAuthenticatedMessageSender;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
-import ru.kestar.alisabot.service.UserService;
+import ru.kestar.alisabot.service.BotUserService;
 
 @Component
 @RequiredArgsConstructor
 public class OauthSuccessHandler implements AuthenticationSuccessHandler {
     private final OAuth2AuthorizedClientService authorizedClientService;
-    private final UserService userService;
+    private final BotUserService botUserService;
     private final UserAuthenticatedMessageSender userAuthenticatedMessageSender;
 
     @Override
@@ -52,7 +52,7 @@ public class OauthSuccessHandler implements AuthenticationSuccessHandler {
             .accessToken(authClient.getAccessToken().getTokenValue())
             .login(login)
             .build();
-        userService.signInUser(telegramUserId, tokenInfo);
+        botUserService.signInUser(telegramUserId, tokenInfo);
         userAuthenticatedMessageSender.send(telegramUserId, login);
     }
 }

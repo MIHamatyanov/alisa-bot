@@ -7,23 +7,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.kestar.alisabot.exception.UserNotFoundException;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
-import ru.kestar.alisabot.model.entity.User;
-import ru.kestar.alisabot.repository.UserRepository;
-import ru.kestar.alisabot.service.UserService;
+import ru.kestar.alisabot.model.entity.BotUser;
+import ru.kestar.alisabot.repository.BotUserRepository;
+import ru.kestar.alisabot.service.BotUserService;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class BotUserServiceImpl implements BotUserService {
 
-    private final UserRepository userRepository;
+    private final BotUserRepository botUserRepository;
 
     @Override
     public void signInUser(String telegramId, YandexTokenInfo tokenInfo) {
         final Long telegramIdLong = Long.parseLong(telegramId);
-        final User user = userRepository.findByTelegramId(telegramIdLong)
+        final BotUser user = botUserRepository.findByTelegramId(telegramIdLong)
             .orElseGet(() -> {
-                User newUser = new User();
+                BotUser newUser = new BotUser();
                 newUser.setTelegramId(telegramIdLong);
                 return newUser;
             });
@@ -34,26 +34,26 @@ public class UserServiceImpl implements UserService {
         user.setToken(tokenInfo.getAccessToken());
         user.setLoginDate(LocalDateTime.now());
 
-        userRepository.save(user);
+        botUserRepository.save(user);
     }
 
     @Override
-    public User getUserByTelegramId(String telegramId) {
-        return userRepository.findByTelegramId(Long.parseLong(telegramId))
+    public BotUser getUserByTelegramId(String telegramId) {
+        return botUserRepository.findByTelegramId(Long.parseLong(telegramId))
             .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
     public void logoutUser(String telegramId) {
-        final Optional<User> userOpt = userRepository.findByTelegramId(Long.valueOf(telegramId));
+        final Optional<BotUser> userOpt = botUserRepository.findByTelegramId(Long.valueOf(telegramId));
         if (userOpt.isEmpty()) {
             return;
         }
 
-        final User user = userOpt.get();
+        final BotUser user = userOpt.get();
         user.setLogin(null);
         user.setToken(null);
-        user.setParent(null);
-        userRepository.save(user);
+        user.setParent(null
+        botUserRepository.save(user);
     }
 }

@@ -13,8 +13,8 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.kestar.alisabot.bot.menu.MenuBuilder;
 import ru.kestar.alisabot.exception.UserNotFoundException;
-import ru.kestar.alisabot.model.entity.User;
-import ru.kestar.alisabot.service.UserService;
+import ru.kestar.alisabot.model.entity.BotUser;
+import ru.kestar.alisabot.service.BotUserService;
 import ru.kestar.telegrambotstarter.context.TelegramActionContext;
 import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 
@@ -22,12 +22,12 @@ import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 @RequiredArgsConstructor
 public class StartCommandHandler implements UpdateHandler {
     private final MenuBuilder menuBuilder;
-    private final UserService userService;
+    private final BotUserService botUserService;
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
         try {
-            final User user = userService.getUserByTelegramId(context.getChatId());
+            final BotUser user = botUserService.getUserByTelegramId(context.getChatId());
             return user.isAuthenticated()
                 ? buildAuthenticatedUserMessage(context, user)
                 : buildUnauthenticatedUserMessage(context);
@@ -37,7 +37,7 @@ public class StartCommandHandler implements UpdateHandler {
     }
 
     private Optional<BotApiMethod<?>> buildAuthenticatedUserMessage(TelegramActionContext context,
-                                                                    User user) {
+                                                                    BotUser user) {
         final String text = """
             Добро пожаловать, %s!
             Что хотите сделать?

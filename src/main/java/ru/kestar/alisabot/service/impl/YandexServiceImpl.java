@@ -10,25 +10,25 @@ import ru.kestar.alisabot.model.dto.yandex.request.DeviceActionsInfo;
 import ru.kestar.alisabot.model.dto.yandex.request.ExecuteDeviceActionsRequest;
 import ru.kestar.alisabot.model.dto.yandex.request.ExecuteGroupActionsRequest;
 import ru.kestar.alisabot.model.dto.yandex.response.SmartHouseInfo;
-import ru.kestar.alisabot.model.entity.User;
-import ru.kestar.alisabot.service.UserService;
+import ru.kestar.alisabot.model.entity.BotUser;
+import ru.kestar.alisabot.service.BotUserService;
 import ru.kestar.alisabot.service.YandexService;
 
 @Service
 @RequiredArgsConstructor
 public class YandexServiceImpl implements YandexService {
     private final YandexClient yandexClient;
-    private final UserService userService;
+    private final BotUserService botUserService;
 
     @Override
     public SmartHouseInfo getSmartHouseInfo(String telegramChatId) {
-        final User user = userService.getUserByTelegramId(telegramChatId);
+        final BotUser user = botUserService.getUserByTelegramId(telegramChatId);
         return yandexClient.getSmartHouseInfo(user.getToken());
     }
 
     @Override
     public void executeGroupAction(String telegramChatId, String groupId, boolean state) {
-        final User user = userService.getUserByTelegramId(telegramChatId);
+        final BotUser user = botUserService.getUserByTelegramId(telegramChatId);
 
         final ExecuteGroupActionsRequest request = new ExecuteGroupActionsRequest(
             List.of(buildOnOffAction(state))
@@ -38,7 +38,7 @@ public class YandexServiceImpl implements YandexService {
 
     @Override
     public void executeDeviceAction(String telegramChatId, String deviceId, boolean state) {
-        final User user = userService.getUserByTelegramId(telegramChatId);
+        final BotUser user = botUserService.getUserByTelegramId(telegramChatId);
 
         final ExecuteDeviceActionsRequest request = new ExecuteDeviceActionsRequest(
             List.of(new DeviceActionsInfo(deviceId, List.of(buildOnOffAction(state))))

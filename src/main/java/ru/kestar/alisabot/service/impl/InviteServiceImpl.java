@@ -11,21 +11,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kestar.alisabot.model.entity.Invite;
-import ru.kestar.alisabot.model.entity.User;
+import ru.kestar.alisabot.model.entity.BotUser;
 import ru.kestar.alisabot.repository.InviteRepository;
 import ru.kestar.alisabot.service.InviteService;
-import ru.kestar.alisabot.service.UserService;
+import ru.kestar.alisabot.service.BotUserService;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class InviteServiceImpl implements InviteService {
-    private final UserService userService;
+    private final BotUserService botUserService;
     private final InviteRepository inviteRepository;
 
     @Override
     public Invite createNewInvite(String telegramUserId) {
-        final User user = userService.getUserByTelegramId(telegramUserId);
+        final BotUser user = botUserService.getUserByTelegramId(telegramUserId);
 
         final Invite invite = new Invite();
         invite.setOwner(user);
@@ -49,7 +49,7 @@ public class InviteServiceImpl implements InviteService {
 
         final Invite invite = inviteOpt.get();
         if (nonNull(invite.getUsedBy())) {
-            userService.logoutUser(invite.getUsedBy().getTelegramId().toString());
+            botUserService.logoutUser(invite.getUsedBy().getTelegramId().toString());
         }
         inviteRepository.delete(invite);
         return true;

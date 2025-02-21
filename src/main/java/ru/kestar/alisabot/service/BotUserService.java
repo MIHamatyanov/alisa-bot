@@ -1,13 +1,13 @@
 package ru.kestar.alisabot.service;
 
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
-import ru.kestar.alisabot.model.entity.User;
+import ru.kestar.alisabot.model.entity.BotUser;
 
-public interface UserService {
+public interface BotUserService {
 
     void signInUser(String telegramId, YandexTokenInfo tokenInfo);
 
-    User getUserByTelegramId(String telegramId);
+    BotUser getUserByTelegramId(String telegramId);
 
     void logoutUser(String telegramId);
 }
