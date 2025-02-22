@@ -52,7 +52,7 @@ public class GetDevicesCallbackHandler implements UpdateHandler {
     }
 
     private BotApiMethod<?> getSmartHouseInfo(TelegramActionContext context) {
-        final SmartHouseInfo smartHouseInfo = yandexService.getSmartHouseInfo(context.getChatId());
+        final SmartHouseInfo smartHouseInfo = yandexService.getSmartHouseInfo(context.getUser().getId());
 
         final StringJoiner groupsInfo = new StringJoiner("\n");
         for (int i = 0; i < smartHouseInfo.getGroups().size(); i++) {

@@ -5,9 +5,9 @@ import ru.kestar.alisabot.model.entity.Invite;
 
 public interface InviteService {
 
-    Invite createNewInvite(String telegramUserId);
+    Invite createNewInvite(Long telegramUserId);
 
-    List<Invite> getInvitesByOwner(String ownerId);
+    List<Invite> getInvitesByOwner(Long ownerId);
 
-    boolean removeInviteCode(String telegramId, String code);
+    boolean removeInviteCode(Long telegramId, String code);
 }

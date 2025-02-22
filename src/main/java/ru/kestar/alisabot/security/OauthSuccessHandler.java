@@ -52,7 +52,7 @@ public class OauthSuccessHandler implements AuthenticationSuccessHandler {
             .accessToken(authClient.getAccessToken().getTokenValue())
             .login(login)
             .build();
-        botUserService.signInUser(telegramUserId, tokenInfo);
-        userAuthenticatedMessageSender.send(telegramUserId, login);
+        botUserService.signInUserWithYandex(Long.parseLong(telegramUserId), tokenInfo);
+        userAuthenticatedMessageSender.send(telegramUserId);
     }
 }

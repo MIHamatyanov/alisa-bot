@@ -25,6 +25,15 @@ public class BotUser {
     @Column(name = "telegram_id")
     private Long telegramId;
 
+    @Column(name = "username")
+    private String userName;
+
+    @Column(name = "firstname")
+    private String firstName;
+
+    @Column(name = "lastname")
+    private String lastName;
+
     @Column(name = "login")
     private String login;
 

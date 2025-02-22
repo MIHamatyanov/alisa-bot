@@ -29,9 +29,9 @@ public class ToggleDeviceCallbackHandler implements UpdateHandler {
 
         log.info("Executing action for {} with id {}", target, targetId);
         if ("group".equals(target)) {
-            yandexService.executeGroupAction(context.getChatId(), targetId, callbackData.getAction().equals(TURN_ON.name()));
+            yandexService.executeGroupAction(context.getUser().getId(), targetId, callbackData.getAction().equals(TURN_ON.name()));
         } else if ("device".equals(target)) {
-            yandexService.executeDeviceAction(context.getChatId(), targetId, callbackData.getAction().equals(TURN_ON.name()));
+            yandexService.executeDeviceAction(context.getUser().getId(), targetId, callbackData.getAction().equals(TURN_ON.name()));
         }
         return Optional.empty();
     }

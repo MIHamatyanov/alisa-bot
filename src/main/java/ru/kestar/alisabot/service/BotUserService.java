@@ -1,13 +1,16 @@
 package ru.kestar.alisabot.service;
 
+import org.telegram.telegrambots.meta.api.objects.User;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
 import ru.kestar.alisabot.model.entity.BotUser;
 
 public interface BotUserService {
 
-    void signInUser(String telegramId, YandexTokenInfo tokenInfo);
+    BotUser getOrCreateUser(User telegramUser);
 
-    BotUser getUserByTelegramId(String telegramId);
+    void signInUserWithYandex(Long telegramId, YandexTokenInfo tokenInfo);
 
-    void logoutUser(String telegramId);
+    BotUser getUserByTelegramId(Long telegramId);
+
+    void logoutUser(Long telegramUserId);
 }

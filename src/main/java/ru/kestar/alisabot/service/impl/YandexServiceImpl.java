@@ -21,14 +21,14 @@ public class YandexServiceImpl implements YandexService {
     private final BotUserService botUserService;
 
     @Override
-    public SmartHouseInfo getSmartHouseInfo(String telegramChatId) {
-        final BotUser user = botUserService.getUserByTelegramId(telegramChatId);
+    public SmartHouseInfo getSmartHouseInfo(Long telegramUserId) {
+        final BotUser user = botUserService.getUserByTelegramId(telegramUserId);
         return yandexClient.getSmartHouseInfo(user.getToken());
     }
 
     @Override
-    public void executeGroupAction(String telegramChatId, String groupId, boolean state) {
-        final BotUser user = botUserService.getUserByTelegramId(telegramChatId);
+    public void executeGroupAction(Long telegramUserId, String groupId, boolean state) {
+        final BotUser user = botUserService.getUserByTelegramId(telegramUserId);
 
         final ExecuteGroupActionsRequest request = new ExecuteGroupActionsRequest(
             List.of(buildOnOffAction(state))
@@ -37,8 +37,8 @@ public class YandexServiceImpl implements YandexService {
     }
 
     @Override
-    public void executeDeviceAction(String telegramChatId, String deviceId, boolean state) {
-        final BotUser user = botUserService.getUserByTelegramId(telegramChatId);
+    public void executeDeviceAction(Long telegramUserId, String deviceId, boolean state) {
+        final BotUser user = botUserService.getUserByTelegramId(telegramUserId);
 
         final ExecuteDeviceActionsRequest request = new ExecuteDeviceActionsRequest(
             List.of(new DeviceActionsInfo(deviceId, List.of(buildOnOffAction(state))))

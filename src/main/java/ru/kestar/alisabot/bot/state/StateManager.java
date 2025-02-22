@@ -7,17 +7,17 @@ import ru.kestar.alisabot.model.enums.TelegramState;
 
 @Component
 public class StateManager {
-    private final Map<String, TelegramState> userStates = new ConcurrentHashMap<>();
+    private final Map<Long, TelegramState> userStates = new ConcurrentHashMap<>();
 
-    public TelegramState getUserState(String telegramId) {
+    public TelegramState getUserState(Long telegramId) {
         return userStates.get(telegramId);
     }
 
-    public void changeState(String telegramId, TelegramState state) {
+    public void changeState(Long telegramId, TelegramState state) {
         userStates.put(telegramId, state);
     }
 
-    public void clearState(String telegramId) {
+    public void clearState(Long telegramId) {
         userStates.remove(telegramId);
     }
 }

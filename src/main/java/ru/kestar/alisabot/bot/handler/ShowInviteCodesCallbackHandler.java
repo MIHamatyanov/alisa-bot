@@ -31,7 +31,7 @@ public class ShowInviteCodesCallbackHandler implements UpdateHandler {
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        final List<Invite> invites = inviteService.getInvitesByOwner(context.getChatId());
+        final List<Invite> invites = inviteService.getInvitesByOwner(context.getUser().getId());
 
         StringJoiner inviteCodes = new StringJoiner("\n");
         for (int i = 0; i < invites.size(); i++) {

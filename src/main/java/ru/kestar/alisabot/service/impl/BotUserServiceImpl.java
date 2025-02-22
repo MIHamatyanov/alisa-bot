@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.User;
 import ru.kestar.alisabot.exception.UserNotFoundException;
 import ru.kestar.alisabot.model.dto.YandexTokenInfo;
 import ru.kestar.alisabot.model.entity.BotUser;
@@ -19,17 +20,28 @@ public class BotUserServiceImpl implements BotUserService {
     private final BotUserRepository botUserRepository;
 
     @Override
-    public void signInUser(String telegramId, YandexTokenInfo tokenInfo) {
-        final Long telegramIdLong = Long.parseLong(telegramId);
-        final BotUser user = botUserRepository.findByTelegramId(telegramIdLong)
-            .orElseGet(() -> {
-                BotUser newUser = new BotUser();
-                newUser.setTelegramId(telegramIdLong);
-                return newUser;
-            });
+    public BotUser getOrCreateUser(User telegramUser) {
+        return botUserRepository.findByTelegramId(telegramUser.getId())
+            .orElseGet(() -> createUser(telegramUser));
+    }
 
-        log.info("User with telegramId {} {}.", telegramId, user.getId() == null ? "not exists. Creating" : "already exists. Updating");
+    private BotUser createUser(User telegramUser) {
+        log.info("Create new user with telegram id: {}", telegramUser.getId());
 
+        final BotUser botUser = new BotUser();
+        botUser.setTelegramId(telegramUser.getId());
+        botUser.setFirstName(telegramUser.getFirstName());
+        botUser.setLastName(telegramUser.getLastName());
+        botUser.setUserName(telegramUser.getUserName());
+
+        return botUserRepository.save(botUser);
+    }
+
+    @Override
+    public void signInUserWithYandex(Long telegramId, YandexTokenInfo tokenInfo) {
+        final BotUser user = getUserByTelegramId(telegramId);
+
+        log.info("Sign in user with telegram id: {}. Yandex login - {}", telegramId, tokenInfo.getLogin());
         user.setLogin(tokenInfo.getLogin());
         user.setToken(tokenInfo.getAccessToken());
         user.setLoginDate(LocalDateTime.now());
@@ -38,14 +50,14 @@ public class BotUserServiceImpl implements BotUserService {
     }
 
     @Override
-    public BotUser getUserByTelegramId(String telegramId) {
-        return botUserRepository.findByTelegramId(Long.parseLong(telegramId))
+    public BotUser getUserByTelegramId(Long telegramId) {
+        return botUserRepository.findByTelegramId(telegramId)
             .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
-    public void logoutUser(String telegramId) {
-        final Optional<BotUser> userOpt = botUserRepository.findByTelegramId(Long.valueOf(telegramId));
+    public void logoutUser(Long telegramUserId) {
+        final Optional<BotUser> userOpt = botUserRepository.findByTelegramId(telegramUserId);
         if (userOpt.isEmpty()) {
             return;
         }

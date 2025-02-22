@@ -24,7 +24,7 @@ public class InviteServiceImpl implements InviteService {
     private final InviteRepository inviteRepository;
 
     @Override
-    public Invite createNewInvite(String telegramUserId) {
+    public Invite createNewInvite(Long telegramUserId) {
         final BotUser user = botUserService.getUserByTelegramId(telegramUserId);
 
         final Invite invite = new Invite();
@@ -35,21 +35,21 @@ public class InviteServiceImpl implements InviteService {
     }
 
     @Override
-    public List<Invite> getInvitesByOwner(String ownerId) {
-        return inviteRepository.findAllByOwnerTelegramId(Long.parseLong(ownerId));
+    public List<Invite> getInvitesByOwner(Long ownerId) {
+        return inviteRepository.findAllByOwnerTelegramId(ownerId);
     }
 
     @Override
     @Transactional
-    public boolean removeInviteCode(String telegramId, String code) {
-        final Optional<Invite> inviteOpt = inviteRepository.findByOwnerTelegramIdAndCode(Long.parseLong(telegramId), code);
+    public boolean removeInviteCode(Long telegramId, String code) {
+        final Optional<Invite> inviteOpt = inviteRepository.findByOwnerTelegramIdAndCode(telegramId, code);
         if (inviteOpt.isEmpty()) {
             return false;
         }
 
         final Invite invite = inviteOpt.get();
         if (nonNull(invite.getUsedBy())) {
-            botUserService.logoutUser(invite.getUsedBy().getTelegramId().toString());
+            botUserService.logoutUser(invite.getUsedBy().getTelegramId());
         }
         inviteRepository.delete(invite);
         return true;

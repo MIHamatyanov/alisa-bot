@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.kestar.alisabot.bot.menu.MenuBuilder;
-import ru.kestar.alisabot.exception.UserNotFoundException;
 import ru.kestar.alisabot.model.entity.BotUser;
 import ru.kestar.alisabot.service.BotUserService;
 import ru.kestar.telegrambotstarter.context.TelegramActionContext;
@@ -21,53 +20,46 @@ import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 @Component
 @RequiredArgsConstructor
 public class StartCommandHandler implements UpdateHandler {
+    private static final String AUTHENTICATED_USER_START_MESSAGE = """
+        Добро пожаловать!
+        Выберите действие, которое хотите сделать.
+        """;
+    private static final String UNAUTHENTICATED_USER_START_MESSAGE = """
+        Добро пожаловать!
+        Для выполнения действий необходимо авторизоваться с помощью Яндекс.
+        """;
+
     private final MenuBuilder menuBuilder;
     private final BotUserService botUserService;
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        try {
-            final BotUser user = botUserService.getUserByTelegramId(context.getChatId());
-            return user.isAuthenticated()
-                ? buildAuthenticatedUserMessage(context, user)
-                : buildUnauthenticatedUserMessage(context);
-        } catch (UserNotFoundException e) {
-            return buildUnauthenticatedUserMessage(context);
-        }
-    }
+        final BotUser user = botUserService.getOrCreateUser(context.getUser());
+        final boolean authenticated = user.isAuthenticated();
 
-    private Optional<BotApiMethod<?>> buildAuthenticatedUserMessage(TelegramActionContext context,
-                                                                    BotUser user) {
-        final String text = """
-            Добро пожаловать, %s!
-            Что хотите сделать?
-            """.formatted(user.getLogin());
-        final InlineKeyboardMarkup menu = menuBuilder.buildAuthenticatedUserStartMenu();
+        final String messageText = authenticated
+            ? AUTHENTICATED_USER_START_MESSAGE
+            : UNAUTHENTICATED_USER_START_MESSAGE;
+
+        final InlineKeyboardMarkup replyMarkup = authenticated
+            ? menuBuilder.buildAuthenticatedUserStartMenu()
+            : menuBuilder.buildUnauthenticatedUserStartMenu(user.getTelegramId());
 
         final BotApiMethod<?> responseMessage;
         if (context.getUpdate().hasCallbackQuery()) {
             responseMessage = EditMessageText.builder()
                 .chatId(context.getChatId())
                 .messageId(context.getCallbackData().getMessageId())
-                .text(text)
-                .replyMarkup(menu)
+                .text(messageText)
+                .replyMarkup(replyMarkup)
                 .build();
         } else {
             responseMessage = SendMessage.builder()
                 .chatId(context.getChatId())
-                .text(text)
-                .replyMarkup(menu)
+                .text(messageText)
+                .replyMarkup(replyMarkup)
                 .build();
         }
-        return Optional.of(responseMessage);
-    }
-
-    private Optional<BotApiMethod<?>> buildUnauthenticatedUserMessage(TelegramActionContext context) {
-        final SendMessage responseMessage = SendMessage.builder()
-            .chatId(context.getChatId())
-            .text("Добро пожаловать! Для начала работы авторизуйтесь.")
-            .replyMarkup(menuBuilder.buildUnauthenticatedUserStartMenu(context.getChatId()))
-            .build();
         return Optional.of(responseMessage);
     }
 

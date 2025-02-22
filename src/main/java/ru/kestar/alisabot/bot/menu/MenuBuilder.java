@@ -53,10 +53,10 @@ public class MenuBuilder {
             .build();
     }
 
-    public InlineKeyboardMarkup buildUnauthenticatedUserStartMenu(String chatId) {
+    public InlineKeyboardMarkup buildUnauthenticatedUserStartMenu(Long telegramUserId) {
         final InlineKeyboardButton authorizeButton = InlineKeyboardButton.builder()
             .text("Авторизоваться")
-            .url(applicationProperties.getBaseUrl() + "/oauth2/authorization/yandex?telegramId=" + chatId)
+            .url(applicationProperties.getBaseUrl() + "/oauth2/authorization/yandex?telegramId=" + telegramUserId)
             .build();
 
         return InlineKeyboardMarkup.builder()

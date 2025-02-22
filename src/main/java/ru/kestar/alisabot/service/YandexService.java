@@ -4,9 +4,9 @@ import ru.kestar.alisabot.model.dto.yandex.response.SmartHouseInfo;
 
 public interface YandexService {
 
-    SmartHouseInfo getSmartHouseInfo(String telegramChatId);
+    SmartHouseInfo getSmartHouseInfo(Long telegramUserId);
 
-    void executeGroupAction(String telegramChatId, String groupId, boolean state);
+    void executeGroupAction(Long telegramUserId, String groupId, boolean state);
 
-    void executeDeviceAction(String telegramChatId, String deviceId, boolean state);
+    void executeDeviceAction(Long telegramUserId, String deviceId, boolean state);
 }

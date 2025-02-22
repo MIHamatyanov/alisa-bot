@@ -24,7 +24,7 @@ public class TextMessageHandler extends DefaultMessageHandler {
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        final TelegramState currentState = stateManager.getUserState(context.getChatId());
+        final TelegramState currentState = stateManager.getUserState(context.getUser().getId());
 
         return switch (currentState) {
             case DELETE_INVITE_CODE -> handleDeleteInviteCode(context);
@@ -32,8 +32,8 @@ public class TextMessageHandler extends DefaultMessageHandler {
     }
 
     private Optional<BotApiMethod<?>> handleDeleteInviteCode(TelegramActionContext context) {
-        boolean codeDeleted = inviteService.removeInviteCode(context.getChatId(), context.getUpdate().getMessage().getText());
-        stateManager.clearState(context.getChatId());
+        boolean codeDeleted = inviteService.removeInviteCode(context.getUser().getId(), context.getUpdate().getMessage().getText());
+        stateManager.clearState(context.getUser().getId());
 
         final SendMessage response = SendMessage.builder()
             .chatId(context.getChatId())

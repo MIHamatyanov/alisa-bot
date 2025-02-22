@@ -9,19 +9,19 @@ import ru.kestar.telegrambotstarter.bot.TelegramBot;
 @Component
 @RequiredArgsConstructor
 public class UserAuthenticatedMessageSender {
+    private static final String SUCCESS_AUTHENTICATION_MESSAGE = """
+        Авторизация прошла успешно.
+        
+        Выберите действие.
+        """;
+
     private final TelegramBot bot;
     private final MenuBuilder menuBuilder;
 
-    public void send(String chatId, String login) {
+    public void send(String chatId) {
         final SendMessage sendMessage = SendMessage.builder()
             .chatId(chatId)
-            .text("""
-                Авторизация прошла успешно.
-                
-                Добро пожаловать, %s!
-                Что хотите сделать?
-                """.formatted(login)
-            )
+            .text(SUCCESS_AUTHENTICATION_MESSAGE)
             .replyMarkup(menuBuilder.buildAuthenticatedUserStartMenu())
             .build();
 

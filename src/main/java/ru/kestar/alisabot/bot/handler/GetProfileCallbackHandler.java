@@ -29,7 +29,7 @@ public class GetProfileCallbackHandler implements UpdateHandler {
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        final BotUser user = botUserService.getUserByTelegramId(context.getChatId());
+        final BotUser user = botUserService.getUserByTelegramId(context.getUser().getId());
 
         final EditMessageText.EditMessageTextBuilder responseBuilder = EditMessageText.builder()
             .chatId(context.getChatId())

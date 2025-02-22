@@ -21,14 +21,14 @@ public class LogoutCallbackHandler implements UpdateHandler {
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        final String chatId = context.getChatId();
-        botUserService.logoutUser(chatId);
+        final Long telegramUserId = context.getUser().getId();
+        botUserService.logoutUser(telegramUserId);
 
         final EditMessageText responseMessage = EditMessageText.builder()
-            .chatId(chatId)
+            .chatId(context.getChatId())
             .messageId(context.getCallbackData().getMessageId())
             .text("Вы вышли из аккаунта. Для выполнения действий необходимо авторизоваться.")
-            .replyMarkup(menuBuilder.buildUnauthenticatedUserStartMenu(chatId))
+            .replyMarkup(menuBuilder.buildUnauthenticatedUserStartMenu(telegramUserId))
             .build();
         return Optional.of(responseMessage);
     }

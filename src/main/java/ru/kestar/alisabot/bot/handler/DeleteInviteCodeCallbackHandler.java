@@ -23,7 +23,7 @@ public class DeleteInviteCodeCallbackHandler implements UpdateHandler {
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        stateManager.changeState(context.getChatId(), TelegramState.DELETE_INVITE_CODE);
+        stateManager.changeState(context.getUser().getId(), TelegramState.DELETE_INVITE_CODE);
 
         final SendMessage response = SendMessage.builder()
             .chatId(context.getChatId())

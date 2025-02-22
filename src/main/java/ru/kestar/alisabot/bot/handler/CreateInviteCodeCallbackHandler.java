@@ -26,7 +26,7 @@ public class CreateInviteCodeCallbackHandler implements UpdateHandler {
 
     @Override
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
-        final Invite invite = inviteService.createNewInvite(context.getChatId());
+        final Invite invite = inviteService.createNewInvite(context.getUser().getId());
 
         final SendMessage message = SendMessage.builder()
             .chatId(context.getChatId())
