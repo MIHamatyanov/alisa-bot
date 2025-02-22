@@ -1,5 +1,7 @@
 package ru.kestar.alisabot.bot.handler;
 
+import static java.util.Objects.isNull;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -12,6 +14,7 @@ import ru.kestar.alisabot.bot.menu.MenuBuilder;
 import ru.kestar.alisabot.model.entity.Invite;
 import ru.kestar.alisabot.model.enums.TelegramCallbackAction;
 import ru.kestar.alisabot.service.InviteService;
+import ru.kestar.alisabot.utils.DateUtils;
 import ru.kestar.telegrambotstarter.context.TelegramActionContext;
 import ru.kestar.telegrambotstarter.handler.UpdateHandler;
 
@@ -24,7 +27,13 @@ public class ShowInviteCodesCallbackHandler implements UpdateHandler {
         
         %s
         """;
-    private static final String INVITE_CODE_FORMAT = "%s) <pre>%s</pre>\n";
+    private static final String INVITE_CODE_FORMAT = """
+        %s) Код: <code>%s</code>
+            Дата генерации: %s
+            Статус: %s
+        """;
+    private static final String CODE_NOT_USED_MESSAGE = "не используется";
+    private static final String CODE_USED_MESSAGE = "используется @%s";
 
     private final InviteService inviteService;
     private final MenuBuilder menuBuilder;
@@ -33,10 +42,9 @@ public class ShowInviteCodesCallbackHandler implements UpdateHandler {
     public Optional<BotApiMethod<?>> handle(TelegramActionContext context) {
         final List<Invite> invites = inviteService.getInvitesByOwner(context.getUser().getId());
 
-        StringJoiner inviteCodes = new StringJoiner("\n");
+        final StringJoiner inviteCodes = new StringJoiner("\n");
         for (int i = 0; i < invites.size(); i++) {
-            final Invite invite = invites.get(i);
-            inviteCodes.add(INVITE_CODE_FORMAT.formatted(i + 1, invite.getCode()));
+            inviteCodes.add(getInviteInfo(i, invites.get(i)));
         }
 
         final EditMessageText response = EditMessageText.builder()
@@ -47,6 +55,14 @@ public class ShowInviteCodesCallbackHandler implements UpdateHandler {
             .replyMarkup(menuBuilder.buildInviteCodesMenu())
             .build();
         return Optional.of(response);
+    }
+
+    private String getInviteInfo(int order, Invite invite) {
+        return INVITE_CODE_FORMAT.formatted(
+            order + 1, invite.getCode(),
+            DateUtils.formatDateTime(invite.getCreatedAt()),
+            isNull(invite.getUsedBy()) ? CODE_NOT_USED_MESSAGE : CODE_USED_MESSAGE.formatted(invite.getUsedBy().getUserName())
+        );
     }
 
     @Override

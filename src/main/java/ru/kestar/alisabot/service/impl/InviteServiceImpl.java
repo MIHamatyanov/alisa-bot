@@ -36,7 +36,7 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     public List<Invite> getInvitesByOwner(Long ownerId) {
-        return inviteRepository.findAllByOwnerTelegramId(ownerId);
+        return inviteRepository.findUserInvites(ownerId);
     }
 
     @Override
