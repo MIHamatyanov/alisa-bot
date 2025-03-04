@@ -54,6 +54,15 @@ public class GetDevicesCallbackHandler implements UpdateHandler {
     private BotApiMethod<?> getSmartHouseInfo(TelegramActionContext context) {
         final SmartHouseInfo smartHouseInfo = yandexService.getSmartHouseInfo(context.getUser().getId());
 
+        if (smartHouseInfo.getDevices().isEmpty()) {
+            return EditMessageText.builder()
+                    .chatId(context.getChatId())
+                    .messageId(context.getCallbackData().getMessageId())
+                    .text("У вас нет устройств")
+                    .replyMarkup(menuBuilder.buildUserDevicesMenu(smartHouseInfo))
+                    .build();
+        }
+
         final StringJoiner groupsInfo = new StringJoiner("\n");
         for (int i = 0; i < smartHouseInfo.getGroups().size(); i++) {
             final GroupInfo groupInfo = smartHouseInfo.getGroups().get(i);
